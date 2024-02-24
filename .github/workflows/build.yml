@@ -16,6 +16,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
       - name: Clone repositories
         run: |
           pip3 install vcstool
