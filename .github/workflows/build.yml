@@ -25,7 +25,6 @@ jobs:
 
       - name: Pull docker images
         run: |
-          docker pull --platform linux/arm64/v8 ghcr.io/fortefibre/buildroot:humble-aarch64
           docker pull ghcr.io/fortefibre/buildroot:humble-amd64
 
       - name: Build amd64 packages
@@ -34,6 +33,12 @@ jobs:
           rosdistro: humble
           platform: amd64
           out_dir: "./debs"
+
+      - name: Pull docker images
+        run: |
+          docker rmi ghcr.io/fortefibre/buildroot:humble-amd64
+          docker system prune -f
+          docker pull --platform linux/arm64/v8 ghcr.io/fortefibre/buildroot:humble-aarch64
 
       - name: Build amd64 packages
         uses: ForteFibre/fortefibre_github_action/create_debian_packages@main
