@@ -1,0 +1,49 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "dependency.repos"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Clone repositories
+        run: |
+          pip install vcstool
+          mkdir -p external
+          vcs import external < dependency.repos
+          vcs pull external
+
+      - name: Build amd64 packages
+        uses: ForteFibre/fortefibre_github_action/create_debian_packages@main
+        with:
+          rosdistro: humble
+          platform: amd64
+          out_dir: "./debs"
+
+      - name: Build amd64 packages
+        uses: ForteFibre/fortefibre_github_action/create_debian_packages@main
+        with:
+          rosdistro: humble
+          platform: aarch64
+          out_dir: "./debs"
+
+      - name: Update APT repository
+        uses: ForteFibre/fortefibre_github_action/update_apt_repo@main
+        with:
+          input_dir: "./debs"
+          s3_bucket: "fortefibre-apt"
+          s3_access_key_id: ${{ secrets.S3_KEY_ID }}
+          s3_access_key_secret: ${{ secrets.S3_KEY_SECRET }}
+          s3_endpoint: ${{ secrets.S3_ENDPOINT }}
+          gpg_private_key: ${{ secrets.GPG_KEY }}
+          gpg_fingerprint: 6FD24526DB354C619705230B69ACCD996E5940A7
