@@ -19,3 +19,7 @@ repositories:
     type: git
     url: https://github.com/autowarefoundation/ros2_socketcan.git
     version: main
+  ros2bag_extensions:
+    type: git
+    url: https://github.com/tier4/ros2bag_extensions.git
+    version: main
