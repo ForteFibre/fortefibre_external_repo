@@ -21,6 +21,14 @@ jobs:
         with:
           tool-cache: false
 
+      - name: Change data-dir
+        run: |
+          sudo systemctl stop docker
+          sudo rm -rf /var/lib/docker
+          sudo mkdir /mnt/docker
+          sudo ln -s /mnt/docker /var/lib/docker
+          sudo systemctl start docker
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -31,34 +39,9 @@ jobs:
           vcs import external < dependency.repos
           vcs pull external
 
-      - name: Pull docker images
-        run: |
-          docker pull ghcr.io/fortefibre/buildroot:humble-amd64
-
-      - name: Build amd64 packages
-        uses: ForteFibre/fortefibre_github_action/create_debian_packages@main
+      - name: Build and publish packages
+        uses: ForteFibre/fortefibre_github_action/create_debian_packages_batch@main
         with:
-          rosdistro: humble
-          platform: amd64
-          out_dir: "./debs"
-
-      - name: Pull docker images
-        run: |
-          docker rmi ghcr.io/fortefibre/buildroot:humble-amd64
-          docker system prune -f
-          docker pull --platform linux/arm64/v8 ghcr.io/fortefibre/buildroot:humble-aarch64
-
-      - name: Build amd64 packages
-        uses: ForteFibre/fortefibre_github_action/create_debian_packages@main
-        with:
-          rosdistro: humble
-          platform: aarch64
-          out_dir: "./debs"
-
-      - name: Update APT repository
-        uses: ForteFibre/fortefibre_github_action/update_apt_repo@main
-        with:
-          input_dir: "./debs"
           s3_bucket: "fortefibre-apt"
           s3_access_key_id: ${{ secrets.S3_KEY_ID }}
           s3_access_key_secret: ${{ secrets.S3_KEY_SECRET }}
