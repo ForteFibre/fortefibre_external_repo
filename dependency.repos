@@ -15,3 +15,7 @@ repositories:
     type: git
     url: https://github.com/autowarefoundation/ros2_socketcan.git
     version: main
+  bboxes_ex_msgs:
+      type: git
+      url: https://github.com/ForteFibre/bbox_ex_msgs.git
+      version: main
