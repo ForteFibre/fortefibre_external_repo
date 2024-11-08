@@ -1,7 +1,7 @@
 repositories:
   behaviortree_ros2:
     type: git
-    url: https://github.com/BehaviorTree/BehaviorTree.ROS2.git
+    url: https://github.com/ForteFibre/BehaviorTree.ROS2.git
     version: humble
   voicevox_ros2:
     type: git
