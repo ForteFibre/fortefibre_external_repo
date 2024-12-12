@@ -19,3 +19,7 @@ repositories:
     type: git
     url: https://github.com/ForteFibre/bbox_ex_msgs.git
     version: main
+  casadi_vendor:
+    type: git
+    url: https://github.com/tutrobo/casadi_vendor.git
+    version: master
