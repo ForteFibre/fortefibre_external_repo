@@ -21,7 +21,7 @@ repositories:
     version: main
   casadi_vendor:
     type: git
-    url: https://github.com/tutrobo/casadi_vendor.git
+    url: https://github.com/ForteFibre/casadi_vendor.git
     version: master
   ros_odrive:
     type: git
