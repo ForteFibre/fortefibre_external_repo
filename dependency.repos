@@ -3,10 +3,10 @@ repositories:
     type: git
     url: https://github.com/ForteFibre/BehaviorTree.ROS2.git
     version: humble
-  voicevox_ros2:
-    type: git
-    url: https://github.com/tutrobo/voicevox_ros2.git
-    version: master
+  #voicevox_ros2:
+  #  type: git
+  #  url: https://github.com/tutrobo/voicevox_ros2.git
+  #  version: master
   jsk_visualization:
     type: git
     url: https://github.com/ForteFibre/jsk_visualization.git
