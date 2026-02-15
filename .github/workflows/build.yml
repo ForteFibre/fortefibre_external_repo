@@ -1,5 +1,4 @@
 name: Build
-
 on:
   push:
     branches:
@@ -10,16 +9,20 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - runs-on: ubuntu-24.04-arm
+            platform: arm64
+          - runs-on: ubuntu-24.04
+            platform: amd64
+    runs-on: ${{ matrix.runs-on }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/create-github-app-token@v2
+        id: app-token
         with:
-          fetch-depth: 0
-
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: false
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_SECRET_KEY }}
 
       - name: Change data-dir
         run: |
@@ -29,8 +32,12 @@ jobs:
           sudo ln -s /mnt/docker /var/lib/docker
           sudo systemctl start docker
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          ref: main
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Clone repositories
         run: |
@@ -38,8 +45,8 @@ jobs:
           mkdir -p external
           vcs import external < dependency.repos
           vcs pull external
-
-      - name: Build and publish packages
+        
+      - name: Build packages
         uses: ForteFibre/fortefibre_github_action/create_debian_packages_batch@main
         with:
           s3_bucket: "fortefibre-apt"
@@ -48,3 +55,4 @@ jobs:
           s3_endpoint: ${{ secrets.S3_ENDPOINT }}
           gpg_private_key: ${{ secrets.GPG_KEY }}
           gpg_fingerprint: 6FD24526DB354C619705230B69ACCD996E5940A7
+          platform: ${{ matrix.platform }}
