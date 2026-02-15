@@ -11,10 +11,6 @@ repositories:
     type: git
     url: https://github.com/ForteFibre/jsk_visualization.git
     version: feat/ros2
-  ros2_socketcan:
-    type: git
-    url: https://github.com/autowarefoundation/ros2_socketcan.git
-    version: main
   bboxes_ex_msgs:
     type: git
     url: https://github.com/ForteFibre/bbox_ex_msgs.git
